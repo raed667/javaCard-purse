@@ -142,6 +142,12 @@ public class EPurse extends Applet {
         }
     }
 
+    /**
+     * Outputs the balance of the account 
+     * (balance)
+     *
+     * @param apdu
+     */
     public void getBalance(APDU apdu) {
         // verify authentication
         if (!pin.isValidated()) {
@@ -159,6 +165,11 @@ public class EPurse extends Applet {
         apdu.setOutgoingAndSend((short) 0, (short) 2);
     }
 
+    /**
+     * Adds money to balance
+     * 
+     * @param apdu 
+     */
     public void addMoney(APDU apdu) {
 
         // verify authentication
@@ -181,6 +192,11 @@ public class EPurse extends Applet {
 
     }
 
+    /**
+     * Removes money from balance
+     * 
+     * @param apdu 
+     */
     public void removeMoney(APDU apdu) {
 
         // verify authentication
