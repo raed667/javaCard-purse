@@ -30,7 +30,7 @@ public class EPurse extends Applet {
     final static short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
     final static short SW_PIN_TO_LONG = 0x6E86;
     final static short SW_PIN_TO_SHORT = 0x6E87;
-    
+
     private short balance = (short) 0;
 
     /**
@@ -143,6 +143,11 @@ public class EPurse extends Applet {
     }
 
     public void getBalance(APDU apdu) {
+        // verify authentication
+        if (!pin.isValidated()) {
+            ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+        }
+
         byte[] buffer = apdu.getBuffer();
         try {
             Util.setShort(buffer, (short) 0, balance);
@@ -155,16 +160,17 @@ public class EPurse extends Applet {
     }
 
     public void addMoney(APDU apdu) {
+
+        // verify authentication
+        if (!pin.isValidated()) {
+            ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+        }
+
         apdu.setIncomingAndReceive();
 
         short amount;
         byte[] buffer = apdu.getBuffer();
 
-        ///  PIN CHECK 
-//        if (!pin.isValidated()) {
-//            ISOException.throwIt(
-//                    ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED);
-//        }
         amount = Util.getShort(buffer, ISO7816.OFFSET_CDATA);
         if (amount <= 0 || (short) (balance + amount) <= 0) // overloading
         {
@@ -176,6 +182,12 @@ public class EPurse extends Applet {
     }
 
     public void removeMoney(APDU apdu) {
+
+        // verify authentication
+        if (!pin.isValidated()) {
+            ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
+        }
+
         apdu.setIncomingAndReceive();
 
         short amount;
